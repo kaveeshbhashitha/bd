@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Happy Birthday 🎉</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    background:linear-gradient(135deg,#ff4e8a,#6a5cff);
+    color:white;
+    position:relative;
+}
+
+/* START SCREEN */
+#startScreen{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:linear-gradient(135deg,#ff4e8a,#6a5cff);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:999;
+}
+
+#startBtn{
+    padding:18px 40px;
+    border:none;
+    border-radius:50px;
+    font-size:22px;
+    cursor:pointer;
+    background:white;
+    color:#ff4e8a;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+#startBtn:hover{
+    transform:scale(1.1);
+}
+
+.tapText{
+    font-size:22px;
+    margin-bottom:20px;
+    animation:bounce 1.5s infinite;
+}
+
+@keyframes bounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+/* COUNTDOWN */
+#countdown{
+    display:none;
+    font-size:120px;
+    font-weight:bold;
+    animation:pop 1s infinite;
+    z-index:2;
+}
+
+@keyframes pop{
+    0%{transform:scale(0.8);}
+    50%{transform:scale(1.2);}
+    100%{transform:scale(0.8);}
+}
+
+/* MAIN CONTENT */
+#mainContent{
+    display:none;
+    animation:fadeIn 2s ease;
+    z-index:2;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+h1{
+    font-size:65px;
+    text-shadow:
+        0 0 10px white,
+        0 0 20px white,
+        0 0 30px pink;
+    margin-bottom:15px;
+}
+
+h2{
+    font-size:35px;
+    margin-bottom:25px;
+}
+
+.emoji{
+    font-size:45px;
+    margin-bottom:20px;
+    animation:bounce 2s infinite;
+}
+
+/* VIDEO */
+.video-container{
+    display:none;
+    margin-top:25px;
+}
+
+video{
+    width:85%;
+    max-width:700px;
+    border-radius:20px;
+    box-shadow:0 0 30px rgba(255,255,255,0.5);
+}
+
+/* BALLOONS */
+.balloon{
+    position:absolute;
+    bottom:-150px;
+    border-radius:50%;
+    animation:float linear infinite;
+    opacity:0.9;
+}
+
+.balloon::after{
+    content:'';
+    position:absolute;
+    width:2px;
+    height:60px;
+    background:white;
+    top:100%;
+    left:50%;
+}
+
+@keyframes float{
+    from{
+        transform:translateY(0);
+    }
+    to{
+        transform:translateY(-130vh);
+    }
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+    h1{
+        font-size:42px;
+    }
+
+    h2{
+        font-size:25px;
+    }
+
+    #countdown{
+        font-size:90px;
+    }
+
+    video{
+        width:95%;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen">
+
+    <div class="tapText">
+        🎉 Someone has a birthday today 🎂
+    </div>
+
+    <button id="startBtn">
+        Tap To Start 🎁
+    </button>
+
+</div>
+
+<!-- COUNTDOWN -->
+<div id="countdown">3</div>
+
+<!-- MAIN CONTENT -->
+<div id="mainContent">
+
+    <div class="emoji">🎂 🎉 🎈</div>
+
+    <h1>Happy Birthday</h1>
+
+    <!-- CHANGE NAME -->
+    <h2>My Crazy Friend 😎</h2>
+
+    <!-- VIDEO -->
+    <div class="video-container" id="videoContainer">
+
+        <video id="birthdayVideo" controls>
+            <source src="./bd.mp4" type="video/mp4">
+        </video>
+
+    </div>
+
+</div>
+
+<script>
+
+const startBtn =
+    document.getElementById("startBtn");
+
+const startScreen =
+    document.getElementById("startScreen");
+
+const countdownEl =
+    document.getElementById("countdown");
+
+const mainContent =
+    document.getElementById("mainContent");
+
+const videoContainer =
+    document.getElementById("videoContainer");
+
+const video =
+    document.getElementById("birthdayVideo");
+
+
+// START EXPERIENCE
+startBtn.addEventListener("click", () => {
+
+    startScreen.style.display = "none";
+
+    countdownEl.style.display = "block";
+
+    startCountdown();
+
+});
+
+
+// COUNTDOWN
+function startCountdown(){
+
+    let count = 3;
+
+    countdownEl.innerText = count;
+
+    const interval = setInterval(() => {
+
+        count--;
+
+        if(count > 0){
+
+            countdownEl.innerText = count;
+
+        }else{
+
+            clearInterval(interval);
+
+            countdownEl.style.display = "none";
+
+            mainContent.style.display = "block";
+
+            createBalloons();
+
+            // SHOW VIDEO
+            setTimeout(() => {
+
+                videoContainer.style.display = "block";
+
+                // PLAY WITH SOUND
+                video.muted = false;
+
+                video.play();
+
+            },1500);
+
+        }
+
+    },1000);
+}
+
+
+// BALLOONS
+function createBalloons(){
+
+    for(let i=0;i<35;i++){
+
+        const balloon =
+            document.createElement("div");
+
+        balloon.classList.add("balloon");
+
+        balloon.style.left =
+            Math.random()*100 + "vw";
+
+        balloon.style.width =
+            (Math.random()*30 + 40) + "px";
+
+        balloon.style.height =
+            (Math.random()*40 + 60) + "px";
+
+        balloon.style.background =
+            `hsl(${Math.random()*360},80%,60%)`;
+
+        balloon.style.animationDuration =
+            (Math.random()*6 + 5) + "s";
+
+        document.body.appendChild(balloon);
+    }
+}
+
+</script>
+
+</body>
+</html>
